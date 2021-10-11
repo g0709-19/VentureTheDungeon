@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    static CameraController camera;
 
     public Transform targetTransform;
     public Transform crosshairTransform;
     public float moveSpeed = 0.125f;
     public float distance = 2.0f;
     public Vector3 offset;
+
+    void Start()
+    {
+        if (camera == null)
+            camera = this;
+        else
+            Destroy(this);
+    }
 
     void FixedUpdate()
     {
@@ -29,15 +38,24 @@ public class CameraController : MonoBehaviour
         return point;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    const float SHAKE_OFFSET = 1.0f;
+
+    public static void Shake()
     {
-        
+        Vector3 desiredPosition = camera.transform.position;
+        desiredPosition.y += SHAKE_OFFSET;
+        float moveSpeed = 2.0f * Time.deltaTime;
+        Vector3 shakedPosition = Vector3.Lerp(camera.transform.position, desiredPosition, moveSpeed);
+        camera.transform.position = shakedPosition;
+        camera.Invoke("CalmDown", 0.05f);
     }
 
-    // Update is called once per frame
-    void Update()
+    void CalmDown()
     {
-        
+        Vector3 desiredPosition = camera.transform.position;
+        desiredPosition.y -= SHAKE_OFFSET;
+        float moveSpeed = 2.0f * Time.deltaTime;
+        Vector3 shakedPosition = Vector3.Lerp(camera.transform.position, desiredPosition, moveSpeed);
+        camera.transform.position = shakedPosition;
     }
 }

@@ -6,6 +6,7 @@ public class WeaponPointing : MonoBehaviour
 {
 
     public Transform centerTransform;
+    public Transform sPointTransform;
 
     SpriteRenderer myRenderer;
     SpriteRenderer playerRenderer;
@@ -24,23 +25,38 @@ public class WeaponPointing : MonoBehaviour
 
         float eulerAngle = centerTransform.eulerAngles.z;
 
-        Debug.Log(centerTransform.eulerAngles);
+        //Debug.Log(centerTransform.eulerAngles);
 
         if (90 <= eulerAngle && eulerAngle <= 270)
         {
-            myRenderer.flipY = true;
-            float x = transform.parent.position.x - 0.65f;
-            float y = transform.parent.position.y;
-            Vector2 leftPosition = new Vector2(x, y);
-            transform.position = leftPosition;
+            if (!myRenderer.flipY)
+            {
+                myRenderer.flipY = true;
+                FlipSPoint();
+                float x = transform.parent.position.x - 0.65f;
+                float y = transform.parent.position.y;
+                Vector2 leftPosition = new Vector2(x, y);
+                transform.position = leftPosition;
+            }
         }
         else
         {
-            float x = transform.parent.position.x + 0.65f;
-            float y = transform.parent.position.y;
-            Vector2 leftPosition = new Vector2(x, y);
-            transform.position = leftPosition;
-            myRenderer.flipY = false;
+            if (myRenderer.flipY)
+            {
+                float x = transform.parent.position.x + 0.65f;
+                float y = transform.parent.position.y;
+                Vector2 leftPosition = new Vector2(x, y);
+                transform.position = leftPosition;
+                myRenderer.flipY = false;
+                FlipSPoint();
+            }
         }
+    }
+
+    void FlipSPoint()
+    {
+        Vector3 temp = sPointTransform.localPosition;
+        temp.y *= -1;
+        sPointTransform.localPosition = temp;
     }
 }
