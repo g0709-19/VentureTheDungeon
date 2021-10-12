@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 50
-  lifeTime: 2
+  lifeTime: 5
   animator: {fileID: 9177601140226776808}
   rigidBody: {fileID: -7289275912906047562}
 --- !u!50 &-7289275912906047562
