@@ -17,6 +17,8 @@ public class WeaponPointing : MonoBehaviour
         playerRenderer = transform.parent.GetComponent<SpriteRenderer>();
     }
 
+    public float distanceFromPlayer = 1.0f;
+
     void FixedUpdate()
     {
         Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
@@ -33,7 +35,7 @@ public class WeaponPointing : MonoBehaviour
             {
                 myRenderer.flipY = true;
                 FlipSPoint();
-                float x = transform.parent.position.x - 0.65f;
+                float x = transform.parent.position.x - distanceFromPlayer;
                 float y = transform.parent.position.y;
                 Vector2 leftPosition = new Vector2(x, y);
                 transform.position = leftPosition;
@@ -43,7 +45,7 @@ public class WeaponPointing : MonoBehaviour
         {
             if (myRenderer.flipY)
             {
-                float x = transform.parent.position.x + 0.65f;
+                float x = transform.parent.position.x + distanceFromPlayer;
                 float y = transform.parent.position.y;
                 Vector2 leftPosition = new Vector2(x, y);
                 transform.position = leftPosition;

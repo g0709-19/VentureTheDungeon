@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 5.0f;
     public AudioSource walkSound;
+    public Transform gun;
+    public float speed = 5.0f;
+    public float hp = 20.0f;
 
     float h, v;
     Rigidbody2D rigidBody;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    bool isDead = false;
 
-    const string IS_WALKING = "isWalking";
+    const string IS_WALKING = "Walking";
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+        {
+            if (isWalking()) stopWalkMotion();
+            return;
+        }
+
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
@@ -39,7 +48,6 @@ public class PlayerController : MonoBehaviour
             if (!isPlayingWalkMotion())
             {
                 startWalkMotion();
-                Debug.Log("start walking motion");
             }
         } else
         {
@@ -91,8 +99,29 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDead) return;
+
         Vector2 newVelocity = new Vector2(h, v);
         newVelocity *= speed;
         rigidBody.velocity = newVelocity;
+    }
+
+    public void DamagedByMonster(GameObject monster, float damage)
+    {
+        if (isDead) return;
+        hp -= damage;
+        if (hp < 0)
+            hp = 0;
+        Debug.Log(monster + " 에게 " + damage + " 데미지 입음");
+        Debug.Log(hp + " 남음");
+        if (hp <= 0)
+            Die();
+    }
+
+    public void Die()
+    {
+        animator.SetTrigger("Die");
+        gun.gameObject.SetActive(false);
+        isDead = true;
     }
 }

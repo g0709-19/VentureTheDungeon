@@ -26,9 +26,18 @@ public class MonsterController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Particle"))
+            return;
+        
+        switch (collision.gameObject.tag)
         {
-            Physics2D.IgnoreCollision(collision.collider, collider);
+            case "Player":
+                Debug.Log("Player에게 데미지!");
+                collision.gameObject.GetComponent<PlayerController>().DamagedByMonster(gameObject, 20f);
+                break;
+            case "Particle":
+                Debug.Log("Player에게 공격받음!");
+                break;
         }
     }
 }

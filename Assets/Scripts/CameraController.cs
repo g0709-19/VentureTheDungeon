@@ -14,29 +14,46 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        if (camera == null)
+        if (camera == null) {
             camera = this;
+            targetPosition = transform.position;
+        }
         else
             Destroy(this);
     }
 
-    void FixedUpdate()
-    {
-        Vector3 desiredPosition = targetTransform.position + offset;
-        Vector3 directionToCrosshairFromPlayer = Vector3.zero - GetMousePoint();
-        directionToCrosshairFromPlayer = directionToCrosshairFromPlayer.normalized * -1 * distance;
-        desiredPosition += directionToCrosshairFromPlayer;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, moveSpeed);
-        transform.position = smoothedPosition;
+    Vector3 targetPosition;
 
-    }
-    Vector3 GetMousePoint()
+    public void MoveTo(Vector3 position)
     {
-        Vector3 mouse = Input.mousePosition;
-        Ray castPoint = Camera.main.ScreenPointToRay(mouse);
-        Vector3 point = castPoint.GetPoint(0.0f);
-        return point;
+        Debug.Log(position);
+        targetPosition = position;
+        targetPosition.z = transform.position.z;
     }
+
+    private void FixedUpdate()
+    {
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, moveSpeed);
+        transform.position = smoothedPosition;
+    }
+
+    //void FixedUpdate()
+    //{
+    //    Vector3 desiredPosition = targetTransform.position + offset;
+    //    Vector3 directionToCrosshairFromPlayer = Vector3.zero - GetMousePoint();
+    //    directionToCrosshairFromPlayer = directionToCrosshairFromPlayer.normalized * -1 * distance;
+    //    desiredPosition += directionToCrosshairFromPlayer;
+    //    Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, moveSpeed);
+    //    transform.position = smoothedPosition;
+
+    //}
+    //Vector3 GetMousePoint()
+    //{
+    //    Vector3 mouse = Input.mousePosition;
+    //    Ray castPoint = Camera.main.ScreenPointToRay(mouse);
+    //    Vector3 point = castPoint.GetPoint(0.0f);
+    //    return point;
+    //}
 
     const float SHAKE_OFFSET = 1.0f;
 
