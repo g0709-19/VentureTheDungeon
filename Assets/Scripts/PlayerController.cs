@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public AudioSource walkSound;
-    public Transform gun;
+    public GunController gun;
     public Canvas gameOverUI;
     public float speed = 5.0f;
     public float hp = 20.0f;

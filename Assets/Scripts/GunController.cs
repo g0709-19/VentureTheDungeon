@@ -6,12 +6,24 @@ public class GunController : MonoBehaviour
 {
     public GameObject bullet;
     public Transform sPoint;
+    public SpriteRenderer reloadUI;
     public float timeBetweenShots;
+    public float reloadTime = 2f;
+
+
+    public int maxAmmo = 10;
+    private int ammo;
 
     public AudioSource audioSource;
     public AudioClip[] shootSounds;
+    public AudioClip reloadSound;
 
     private float shotTime;
+
+    private void Start()
+    {
+        ammo = maxAmmo;
+    }
 
     void Update()
     {
@@ -21,19 +33,26 @@ public class GunController : MonoBehaviour
             if (Time.time >= shotTime)
             {
                 ShootBullet();
-                PlayRandomShootSound();
-                CameraController.Shake();
             }
         }
     }
 
     void ShootBullet()
     {
+        if (!hasAmmo()) return;
         float angle = GetAngleToMouse();
         //총알을 생성한다
         Instantiate(bullet, sPoint.position, Quaternion.AngleAxis(angle - 90.0f, Vector3.forward));
         //재장전 총알 딜레이 
         shotTime = Time.time + timeBetweenShots;
+        UseAmmo();
+        PlayRandomShootSound();
+        CameraController.Shake();
+    }
+
+    bool hasAmmo()
+    {
+        return ammo > 0;
     }
 
     float GetAngleToMouse()
@@ -42,6 +61,23 @@ public class GunController : MonoBehaviour
         Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         //마우스 거리로 부터 각도 계산
         return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+    }
+
+    void UseAmmo()
+    {
+        --ammo;
+        if (ammo <= 0)
+        {
+            reloadUI.gameObject.SetActive(true);
+            StartCoroutine(ReloadAmmo());
+        }
+    }
+
+    IEnumerator ReloadAmmo()
+    {
+        yield return new WaitForSeconds(reloadTime);
+        ammo = maxAmmo;
+        reloadUI.gameObject.SetActive(false);
     }
 
     void PlayRandomShootSound()

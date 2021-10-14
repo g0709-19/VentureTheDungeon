@@ -45,8 +45,6 @@ public class RoomEnter : MonoBehaviour
     {
         if (block == null) return;
         EnableBlock();
-        Debug.Log("spawn monster");
-        // Spawn monsters
         int rand = Random.Range(0, monsters.monsters.Length);
         GameObject monster = monsters.monsters[rand];
         const int AMOUNT_FOR_SPAWN = 3;
@@ -58,7 +56,6 @@ public class RoomEnter : MonoBehaviour
         }
         audioSource.Play();
         spawned = true;
-        // if all kill, disable block
     }
 
     const int ROOM_WIDTH = 3;
