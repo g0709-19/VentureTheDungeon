@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public AudioSource walkSound;
     public Transform gun;
+    public Canvas gameOverUI;
     public float speed = 5.0f;
     public float hp = 20.0f;
 
@@ -30,7 +32,11 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead)
         {
-            if (isWalking()) stopWalkMotion();
+            if (isWalking())
+            {
+                stopWalkMotion();
+                stopWalkSound();
+            }
             return;
         }
 
@@ -51,8 +57,7 @@ public class PlayerController : MonoBehaviour
             }
         } else
         {
-            if (walkSound.isPlaying)
-                walkSound.Stop();
+            stopWalkSound();
             stopWalkMotion();
         }
     }
@@ -87,6 +92,12 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(IS_WALKING, true);
     }
 
+    void stopWalkSound()
+    {
+        if (walkSound.isPlaying)
+            walkSound.Stop();
+    }
+
     bool isPlayingWalkMotion()
     {
         return animator.GetBool(IS_WALKING);
@@ -97,9 +108,17 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(IS_WALKING, false);
     }
 
+    const int MOUSE_LEFT = 0;
+    const int MAIN_SCENE = 2;
+
     private void FixedUpdate()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            if (Input.GetMouseButtonDown(MOUSE_LEFT))
+                SceneManager.LoadScene(MAIN_SCENE);
+            return;
+        }
 
         Vector2 newVelocity = new Vector2(h, v);
         newVelocity *= speed;
@@ -122,6 +141,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("Die");
         gun.gameObject.SetActive(false);
+        gameOverUI.gameObject.SetActive(true);
         isDead = true;
     }
 }

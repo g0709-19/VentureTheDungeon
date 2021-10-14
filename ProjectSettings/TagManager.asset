@@ -9,6 +9,8 @@ TagManager:
   - SpawnPoint
   - Room
   - Block
+  - Monster
+  - Monsters
   layers:
   - Default
   - TransparentFX

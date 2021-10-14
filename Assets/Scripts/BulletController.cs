@@ -48,6 +48,8 @@ public class BulletController : MonoBehaviour
         Destroy(gameObject, ANIMATION_PLAYTIME);
     }
 
+    int bounce = 0;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Particle")
@@ -56,6 +58,7 @@ public class BulletController : MonoBehaviour
             Physics2D.IgnoreLayerCollision(9, 9);
             return;
         }
+
 
         // 충돌 지점
         Vector3 hitPosition = collision.contacts[0].point;
@@ -66,8 +69,17 @@ public class BulletController : MonoBehaviour
         
         startPosition = transform.position;
 
-
         mousePosition = reflectVec.normalized * 2.0f;
         speed *= 1.5f;
+
+        ++bounce;
+
+        if (collision.gameObject.CompareTag("Monster"))
+            Destroy(gameObject);
+    }
+
+    public int GetBounce()
+    {
+        return bounce;
     }
 }

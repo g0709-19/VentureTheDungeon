@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class OpenChest : MonoBehaviour
 {
+
+    public AudioSource audioSource;
+    public SpriteRenderer renderer;
+    public BoxCollider2D collider;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("상자 열었음");
-            Destroy(gameObject);
+            audioSource.Play();
+            renderer.enabled = false;
+            collider.enabled = false;
+            Invoke("Destroy", 0.173f);
         }
+    }
+
+    private void Destroy()
+    {
+        Destroy(gameObject);
     }
 }
