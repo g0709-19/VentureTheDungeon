@@ -172,6 +172,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   block: {fileID: 1217576002905119248}
   audioSource: {fileID: 5719625267517406092}
+  playable: {fileID: 0}
+  bgmSource: {fileID: 0}
+  bossBGM: {fileID: 8300000, guid: 9950c6657e9cc65479f3c153f8746778, type: 3}
 --- !u!1 &4108120077978081
 GameObject:
   m_ObjectHideFlags: 0

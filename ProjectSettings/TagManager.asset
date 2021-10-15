@@ -12,6 +12,8 @@ TagManager:
   - Monster
   - Monsters
   - Boss
+  - BGM
+  - Clear
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossController : MonoBehaviour
 {
@@ -16,9 +17,16 @@ public class BossController : MonoBehaviour
     public AudioClip[] shootSounds;
 
     public GameObject bullet;
+    public Canvas clearUI;
+
+    public clockScript hpBar;
 
     Collider2D collider;
-    bool isDead = false;
+    public bool isDead = false;
+
+    public static bool cleared = false;
+
+    bool isSceneEnded = false;
 
     void Start()
     {
@@ -26,13 +34,23 @@ public class BossController : MonoBehaviour
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         RandomlySelectMode();
         InitBulletPath();
+        StartCoroutine(SceneEnd());
+        hpBar.maxHP = bounceForDead;
+        hpBar.remainHP = bounceForDead;
+    }
+
+    IEnumerator SceneEnd()
+    {
+        yield return new WaitForSeconds(1.5f);
+        isSceneEnded = true;
+        hpBar.gameObject.SetActive(true);
     }
 
     void InitBulletPath()
     {
         vertices = new List<Vector2>();
         float heading;
-        for (int theta = 0; theta < 360; theta += 360 / 30)
+        for (int theta = 0; theta < 360; theta += 360 / 20)
         {
             heading = theta * Mathf.Deg2Rad;
             vertices.Add(new Vector2(Mathf.Cos(heading) * radius, Mathf.Sin(heading) * radius));
@@ -41,6 +59,7 @@ public class BossController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!isSceneEnded) return;
         if (isDead) return;
         switch (mode)
         {
@@ -100,6 +119,7 @@ public class BossController : MonoBehaviour
             Vector2 bossPosition = new Vector2(transform.position.x, transform.position.y);
             GameObject spawnedBullet = Instantiate(bullet, vertice + bossPosition, Quaternion.identity);
             spawnedBullet.GetComponent<Rigidbody2D>().velocity = GetDirectionFromAngle(i) * 2f;
+            spawnedBullet.GetComponent<BossBulletController>().SetBoss(this);
         }
     }
 
@@ -117,8 +137,7 @@ public class BossController : MonoBehaviour
 
     Vector2 GetDirectionFromAngle(int angle)
     {
-        angle = (angle + 1) * 12;
-        Debug.Log(angle);
+        angle = (angle + 1) * 13;
         return Quaternion.Euler(new Vector3(0f, 0f, angle)) * Vector2.up;
     }
 
@@ -171,7 +190,6 @@ public class BossController : MonoBehaviour
                 break;
         }
         mode = rand;
-        Debug.Log(rand);
         Invoke("RandomlySelectMode", WAIT_TIME_FOR_CHANGE_MODE);
     }
 
@@ -193,6 +211,7 @@ public class BossController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!isSceneEnded) return;
         if (isDead) return;
 
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Particle"))
@@ -220,14 +239,23 @@ public class BossController : MonoBehaviour
         {
             bounceForDead = 0;
             isDead = true;
+            StopRunning();
             animator.SetTrigger("Die");
-            Invoke("Die", 1f);
+            Time.timeScale = 0.5f;
+            Invoke("Die", 1.5f);
         }
-        // UI 표시: 못할듯?
+        hpBar.remainHP = bounceForDead;
     }
 
     void Die()
     {
-        Destroy(gameObject);
+        Time.timeScale = 1f;
+        Invoke("ShowClearUI", 1f);
+    }
+
+    void ShowClearUI()
+    {
+        cleared = true;
+        Instantiate(clearUI, Vector2.zero, Quaternion.identity);
     }
 }

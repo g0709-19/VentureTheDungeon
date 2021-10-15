@@ -5,7 +5,6 @@ using UnityEngine;
 public class BossBulletController : MonoBehaviour
 {
     public float speed;
-    public float lifeTime;
 
     public Animator animator;
     public Rigidbody2D rigidBody;
@@ -15,9 +14,6 @@ public class BossBulletController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // 총알을 시간에 맞게 지운다
-        StartCoroutine(WaitForDestroy());
-
         // 총알 생성과 동시에 방향 고정
         heading = rigidBody.velocity;
 
@@ -36,11 +32,11 @@ public class BossBulletController : MonoBehaviour
     const string DESTROY_TRIGGER = "Disappear";
     const float ANIMATION_PLAYTIME = 0.4f;
 
-    IEnumerator WaitForDestroy()
+    BossController boss;
+
+    public void SetBoss(BossController boss)
     {
-        yield return new WaitForSeconds(lifeTime);
-        animator.SetTrigger(DESTROY_TRIGGER);
-        Destroy(gameObject, ANIMATION_PLAYTIME);
+        this.boss = boss;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -52,7 +48,7 @@ public class BossBulletController : MonoBehaviour
             return;
         }
 
-        if (collision.gameObject.CompareTag("Player"))
+        if (!boss.isDead && collision.gameObject.CompareTag("Player"))
             collision.gameObject.GetComponent<PlayerController>().DamagedByMonster(gameObject, 20f);
 
         Destroy(gameObject);

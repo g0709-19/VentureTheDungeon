@@ -30,11 +30,24 @@ public class GunController : MonoBehaviour
         //마우스 왼쪽버튼을 눌렀을때
         if (Input.GetMouseButton(0))
         {
-            if (Time.time >= shotTime)
+            if (BossController.cleared)
+            {
+                ExitGame();
+            }
+            else if (Time.time >= shotTime)
             {
                 ShootBullet();
             }
         }
+    }
+
+    void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     float buffSpeedPercent = 1.0f;

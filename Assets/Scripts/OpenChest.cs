@@ -41,7 +41,7 @@ public class OpenChest : MonoBehaviour
 
     void GiveEffectToPlayer(PlayerController player)
     {
-        if (Random.Range(0, 1) == 0)
+        if (Random.Range(0, 2) == 0)
             shootDelay.affect();
         else
             bulletSpeed.affect();

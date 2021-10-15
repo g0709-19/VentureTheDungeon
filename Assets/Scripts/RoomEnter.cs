@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class RoomEnter : MonoBehaviour
 {
     public GameObject block;
     public AudioSource audioSource;
+    public PlayableDirector playable;
 
     private CameraController camera;
     private MonsterTemplates monsters;
 
     private bool isBossRoom = false;
     private GameObject boss;
+    public AudioSource bgmSource;
+    public AudioClip bossBGM;
 
     public void SetBossRoom()
     {
@@ -23,6 +27,8 @@ public class RoomEnter : MonoBehaviour
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         monsters = GameObject.FindGameObjectWithTag("Monsters").GetComponent<MonsterTemplates>();
         boss = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>().boss;
+        playable = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayableDirector>();
+        bgmSource = GameObject.FindGameObjectWithTag("BGM").GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -112,13 +118,12 @@ public class RoomEnter : MonoBehaviour
             Vector2 playerDirection = (transform.position - collision.transform.position).normalized;
             playerDirection *= 1.5f;
             playerDirection += new Vector2(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y);
-            Debug.Log(playerDirection);
             collision.gameObject.GetComponent<Rigidbody2D>().transform.position = playerDirection;
             camera.MoveTo(transform.position);
             if (cleared || spawned) return;
             if (isBossRoom)
             {
-                Invoke("EnterBossRoom", 1f);
+                EnterBossRoom();
             } else
             {
                 BlockRoom();
@@ -129,11 +134,20 @@ public class RoomEnter : MonoBehaviour
     void EnterBossRoom()
     {
         EnableBlock();
-        SpawnBossMonster();
+        Invoke("SpawnBossMonster", 1f);
     }
 
     void SpawnBossMonster()
     {
+        bgmSource.Stop();
+        playable.Play();
         Instantiate(boss, transform.position, Quaternion.identity);
+        Invoke("PlayBossBGM", 0.5f);
+    }
+
+    void PlayBossBGM()
+    {
+        bgmSource.clip = bossBGM;
+        bgmSource.Play();
     }
 }

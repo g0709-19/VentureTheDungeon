@@ -26,7 +26,6 @@ public class CameraController : MonoBehaviour
 
     public void MoveTo(Vector3 position)
     {
-        Debug.Log(position);
         targetPosition = position;
         targetPosition.z = transform.position.z;
     }
