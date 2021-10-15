@@ -108,6 +108,26 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(IS_WALKING, false);
     }
 
+    public void BuffBulletSpeed()
+    {
+        gun.MakeFasterBulletSpeed();
+    }
+
+    public void BuffShootDelay()
+    {
+        gun.MakeFasterShootSpeed();
+    }
+
+    bool hasOpened = false;
+
+    public bool CanOpenChest()
+    {
+        if (hasOpened)
+            return false;
+        hasOpened = true;
+        return true;
+    }
+
     const int MOUSE_LEFT = 0;
     const int MAIN_SCENE = 2;
 

@@ -37,12 +37,20 @@ public class GunController : MonoBehaviour
         }
     }
 
+    float buffSpeedPercent = 1.0f;
+
+    public void MakeFasterBulletSpeed()
+    {
+        buffSpeedPercent = 1.5f;
+    }
+
     void ShootBullet()
     {
         if (!hasAmmo()) return;
         float angle = GetAngleToMouse();
         //총알을 생성한다
-        Instantiate(bullet, sPoint.position, Quaternion.AngleAxis(angle - 90.0f, Vector3.forward));
+        BulletController bulletController = Instantiate(bullet, sPoint.position, Quaternion.AngleAxis(angle - 90.0f, Vector3.forward)).GetComponent<BulletController>();
+        bulletController.BuffSpeed(buffSpeedPercent);
         //재장전 총알 딜레이 
         shotTime = Time.time + timeBetweenShots;
         UseAmmo();
@@ -90,5 +98,10 @@ public class GunController : MonoBehaviour
     {
         int r = Random.Range(0, shootSounds.Length);
         audioSource.clip = shootSounds[r];
+    }
+
+    public void MakeFasterShootSpeed()
+    {
+        timeBetweenShots -= 0.1f;
     }
 }

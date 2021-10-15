@@ -1893,6 +1893,7 @@ GameObject:
   - component: {fileID: 7248815087878128265}
   - component: {fileID: -633812737988385045}
   - component: {fileID: 7248815087878128264}
+  - component: {fileID: 7761694256848985997}
   m_Layer: 0
   m_Name: IT
   m_TagString: Room
@@ -2053,6 +2054,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   block: {fileID: 0}
   audioSource: {fileID: -633812737988385045}
+--- !u!114 &7761694256848985997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248815087878128266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7386f099a76e2f349aaddda1e6644cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7248815088857457032
 GameObject:
   m_ObjectHideFlags: 0

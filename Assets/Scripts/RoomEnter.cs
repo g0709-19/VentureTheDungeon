@@ -10,19 +10,36 @@ public class RoomEnter : MonoBehaviour
     private CameraController camera;
     private MonsterTemplates monsters;
 
+    private bool isBossRoom = false;
+    private GameObject boss;
+
+    public void SetBossRoom()
+    {
+        isBossRoom = true;
+    }
+
     private void Start()
     {
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         monsters = GameObject.FindGameObjectWithTag("Monsters").GetComponent<MonsterTemplates>();
+        boss = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>().boss;
     }
 
     private void Update()
     {
-        if (!cleared && spawned && CountSurviveMonsters() == 0)
+        if (isBossRoom)
         {
-            DisableBlock();
-            spawned = false;
-            cleared = true;
+            if (!cleared && spawned)
+            {
+            }
+        } else
+        {
+            if (!cleared && spawned && CountSurviveMonsters() == 0)
+            {
+                DisableBlock();
+                spawned = false;
+                cleared = true;
+            }
         }
     }
 
@@ -41,14 +58,19 @@ public class RoomEnter : MonoBehaviour
     bool spawned = false;
     bool cleared = false;
 
-    void SpawnMonster()
+    void BlockRoom()
     {
         if (block == null) return;
         EnableBlock();
+        Invoke("SpawnMonster", 1f);
+    }
+
+    void SpawnMonster()
+    {
         int rand = Random.Range(0, monsters.monsters.Length);
         GameObject monster = monsters.monsters[rand];
         const int AMOUNT_FOR_SPAWN = 3;
-        for (int i = 0; i < AMOUNT_FOR_SPAWN; ++i) 
+        for (int i = 0; i < AMOUNT_FOR_SPAWN; ++i)
         {
             Vector2 position = RandomPosition();
             GameObject spawnedMonster = Instantiate(monster, position, Quaternion.identity);
@@ -94,7 +116,24 @@ public class RoomEnter : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody2D>().transform.position = playerDirection;
             camera.MoveTo(transform.position);
             if (cleared || spawned) return;
-            SpawnMonster();
+            if (isBossRoom)
+            {
+                Invoke("EnterBossRoom", 1f);
+            } else
+            {
+                BlockRoom();
+            }
         }
+    }
+
+    void EnterBossRoom()
+    {
+        EnableBlock();
+        SpawnBossMonster();
+    }
+
+    void SpawnBossMonster()
+    {
+        Instantiate(boss, transform.position, Quaternion.identity);
     }
 }

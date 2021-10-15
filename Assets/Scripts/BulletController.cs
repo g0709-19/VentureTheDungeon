@@ -19,6 +19,7 @@ public class BulletController : MonoBehaviour
         StartCoroutine(WaitForDestroy());
 
         // 총알 생성과 동시에 방향 고정
+        //heading = GetPositionToMouse().normalized * 5.0f;
         mousePosition = GetPositionToMouse().normalized * 5.0f;
 
         startPosition = transform.position;
@@ -74,12 +75,17 @@ public class BulletController : MonoBehaviour
 
         ++bounce;
 
-        if (collision.gameObject.CompareTag("Monster"))
+        if (collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("Boss"))
             Destroy(gameObject);
     }
 
     public int GetBounce()
     {
         return bounce;
+    }
+
+    public void BuffSpeed(float percent)
+    {
+        this.speed *= percent;
     }
 }
