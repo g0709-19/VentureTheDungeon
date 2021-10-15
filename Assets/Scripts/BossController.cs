@@ -50,7 +50,7 @@ public class BossController : MonoBehaviour
     {
         vertices = new List<Vector2>();
         float heading;
-        for (int theta = 0; theta < 360; theta += 360 / 20)
+        for (int theta = 0; theta < 360; theta += 360 / 30)
         {
             heading = theta * Mathf.Deg2Rad;
             vertices.Add(new Vector2(Mathf.Cos(heading) * radius, Mathf.Sin(heading) * radius));
@@ -137,7 +137,7 @@ public class BossController : MonoBehaviour
 
     Vector2 GetDirectionFromAngle(int angle)
     {
-        angle = (angle + 1) * 13;
+        angle = (angle + 1) * 12;
         return Quaternion.Euler(new Vector3(0f, 0f, angle)) * Vector2.up;
     }
 
