@@ -19,7 +19,6 @@ public class BulletController : MonoBehaviour
         StartCoroutine(WaitForDestroy());
 
         // 총알 생성과 동시에 방향 고정
-        //heading = GetPositionToMouse().normalized * 5.0f;
         mousePosition = GetPositionToMouse().normalized * 5.0f;
 
         startPosition = transform.position;
@@ -53,6 +52,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 총알이 플레이어나 같은 총알과 부딪히면 충돌 무시
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Particle")
         {
             Physics2D.IgnoreLayerCollision(8, 9);
@@ -60,11 +60,10 @@ public class BulletController : MonoBehaviour
             return;
         }
 
-
         // 충돌 지점
         Vector3 hitPosition = collision.contacts[0].point;
 
-        // 벽에 충돌시 튕기는용 입사각, 반사각
+        // 벽에 충돌시 튕기도록 입사각, 반사각 구함
         Vector3 incomingVec = hitPosition - startPosition;
         Vector3 reflectVec = Vector3.Reflect(incomingVec, collision.contacts[0].normal);
         

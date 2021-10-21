@@ -874,7 +874,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 79941687920b9fa4f8a5cb756929ac39, type: 3}
   - {fileID: 8300000, guid: 4ccce8304869c7547aaf3c7483d7f185, type: 3}
   - {fileID: 8300000, guid: 1438b6a61307de94e8f1dae36b3cfbc6, type: 3}
-  reloadSound: {fileID: 8300000, guid: 0fed4b178fb804f4fbd10c0c682c0ea9, type: 3}
 --- !u!1 &518860546
 GameObject:
   m_ObjectHideFlags: 0
@@ -17392,6 +17391,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorOpenAudio: {fileID: 113052331}
+  boxCollider: {fileID: 0}
+  isOpened: 0
 --- !u!1 &1107614691
 GameObject:
   m_ObjectHideFlags: 0
@@ -18074,7 +18075,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.010369495, y: -0.44304436}
+  m_Offset: {x: 0.028854258, y: -0.5220246}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -18085,7 +18086,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.60726106, y: 0.9080888}
+  m_Size: {x: 0.5434047, y: 0.69635403}
   m_EdgeRadius: 0
 --- !u!50 &1577571943
 Rigidbody2D:

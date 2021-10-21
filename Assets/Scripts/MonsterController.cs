@@ -10,12 +10,10 @@ public class MonsterController : MonoBehaviour
     public float moveSpeed = 2.0f;
     public int bounceForDead;
 
-    Collider2D collider;
     bool isDead = false;
 
     void Start()
     {
-        collider = GetComponent<Collider2D>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -59,7 +57,6 @@ public class MonsterController : MonoBehaviour
             animator.SetTrigger("Die");
             Invoke("Die", 1f);
         }
-        // UI 표시: 못할듯?
     }
 
     void Die()

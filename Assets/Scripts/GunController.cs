@@ -16,7 +16,6 @@ public class GunController : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip[] shootSounds;
-    public AudioClip reloadSound;
 
     private float shotTime;
 
@@ -62,7 +61,8 @@ public class GunController : MonoBehaviour
         if (!hasAmmo()) return;
         float angle = GetAngleToMouse();
         //총알을 생성한다
-        BulletController bulletController = Instantiate(bullet, sPoint.position, Quaternion.AngleAxis(angle - 90.0f, Vector3.forward)).GetComponent<BulletController>();
+        BulletController bulletController = Instantiate(bullet, sPoint.position,
+            Quaternion.AngleAxis(angle - 90.0f, Vector3.forward)).GetComponent<BulletController>();
         bulletController.BuffSpeed(buffSpeedPercent);
         //재장전 총알 딜레이 
         shotTime = Time.time + timeBetweenShots;

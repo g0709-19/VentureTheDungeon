@@ -32,6 +32,7 @@ public class clockScript : MonoBehaviour
         float newBarWidth = (percent / 100) * clockFGMaxWidth;
         int gap = 50;
 
+        // 비율에 맞도록 사각형 영역 잡고 텍스쳐 그림
         GUI.BeginGroup(new Rect((Screen.width - clockBG.width) / 2, gap, clockBG.width, clockBG.height));
         GUI.DrawTexture(new Rect(0, 0, clockBG.width, clockBG.height), clockBG);
         GUI.BeginGroup(new Rect(5, 6, newBarWidth, clockFG.height));

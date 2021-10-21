@@ -115,11 +115,14 @@ public class RoomEnter : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            // 벽에 끼지 않도록 플레이어를 방 안쪽으로 밀어냄
             Vector2 playerDirection = (transform.position - collision.transform.position).normalized;
             playerDirection *= 1.5f;
-            playerDirection += new Vector2(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y);
+            playerDirection += new Vector2(collision.gameObject.transform.position.x,
+                collision.gameObject.transform.position.y);
             collision.gameObject.GetComponent<Rigidbody2D>().transform.position = playerDirection;
-            camera.MoveTo(transform.position);
+
+            camera.MoveTo(transform.position);  // 화면을 들어간 방으로 전환함
             if (cleared || spawned) return;
             if (isBossRoom)
             {

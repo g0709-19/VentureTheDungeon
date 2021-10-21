@@ -5,16 +5,14 @@ using UnityEngine;
 public class RoomSpawner : MonoBehaviour
 {
 
-    public int openingDirection;
+    public int openingDirection;        // 열린 문 방향
 
     private RoomTemplates templates;
-    private int rand;
     private bool spawned = false;
     private Grid parent;
 
     public float waitTime = 4f;
 
-    // Start is called before the first frame update
     void Start()
     {
         Destroy(gameObject, waitTime);
@@ -32,11 +30,13 @@ public class RoomSpawner : MonoBehaviour
     {
         if (spawned == false)
         {
+            int rand;
             switch (openingDirection)
             {
                 case BOTTOM:
                     rand = Random.Range(0, templates.bottomRooms.Length);
-                    InstantiateInParent(templates.bottomRooms[rand], transform.position, templates.bottomRooms[rand].transform.rotation);
+                    InstantiateInParent(templates.bottomRooms[rand], transform.position,
+                        templates.bottomRooms[rand].transform.rotation);
                     break;
                 case TOP:
                     rand = Random.Range(0, templates.topRooms.Length);
@@ -61,7 +61,6 @@ public class RoomSpawner : MonoBehaviour
         createdObject.transform.parent = parent.transform;
         return createdObject;
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("SpawnPoint"))

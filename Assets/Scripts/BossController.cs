@@ -11,13 +11,13 @@ public class BossController : MonoBehaviour
     public SpriteRenderer renderer;
     public Transform shadow;
     public float moveSpeed = 2.0f;
-    public int bounceForDead;
+    public int bounceForDead = 10;          // 몬스터의 체력
 
     public AudioSource audioSource;
     public AudioClip[] shootSounds;
 
-    public GameObject bullet;
-    public Canvas clearUI;
+    public GameObject bullet;   // 보스가 발사하는 총알 Prefab
+    public Canvas clearUI;      // 보스 클리어 시 화면에 표시할 UI
 
     public clockScript hpBar;
 
@@ -26,7 +26,7 @@ public class BossController : MonoBehaviour
 
     public static bool cleared = false;
 
-    bool isSceneEnded = false;
+    bool isSceneEnded = false;  // 보스 등장 장면 끝난 여부
 
     void Start()
     {
@@ -39,6 +39,7 @@ public class BossController : MonoBehaviour
         hpBar.remainHP = bounceForDead;
     }
 
+    // 보스 등장 장면 실행 후 움직이도록 설정
     IEnumerator SceneEnd()
     {
         yield return new WaitForSeconds(1.5f);
@@ -46,6 +47,11 @@ public class BossController : MonoBehaviour
         hpBar.gameObject.SetActive(true);
     }
 
+    List<Vector2> vertices;
+    float radius = 2f;
+
+    // 보스 주변으로 원을 그리는 형태로 총알 생성하는데,
+    // 그 좌표를 보스 생성 시 미리 구해놓음
     void InitBulletPath()
     {
         vertices = new List<Vector2>();
@@ -61,7 +67,7 @@ public class BossController : MonoBehaviour
     {
         if (!isSceneEnded) return;
         if (isDead) return;
-        switch (mode)
+        switch (mode)   // 패턴에 따른 행동
         {
             case FOLLOW_MODE: Follow(); break;
             case ATTACK_MODE: Attack(); break;
@@ -69,13 +75,15 @@ public class BossController : MonoBehaviour
         }
     }
 
+    // 패턴1: 플레이어를 따라다님
     void Follow()
     {
-        StartRunning();
+        StartRunning(); // 달리는 애니메이션 실행
         Vector3 playerPosition = playerTransform.position;
         Vector3 monsterPosition = transform.position;
         Vector3 monsterToPlayerVector = playerPosition - monsterPosition;
 
+        // 몬스터가 플레이어 바라보는 방향에 따라 스프라이트를 뒤집어줌
         if (monsterToPlayerVector.x < 0)
         {
             renderer.flipX = false;
@@ -93,9 +101,10 @@ public class BossController : MonoBehaviour
 
     bool isAttacking = false;
 
+    // 패턴2: 플레이어를 공격함
     void Attack()
     {
-        StopRunning();
+        StopRunning();  // 달리는 애니메이션 정지
         if (!isAttacking)
         {
             animator.SetTrigger("Attack");
@@ -105,9 +114,7 @@ public class BossController : MonoBehaviour
         }
     }
 
-    List<Vector2> vertices;
-    float radius = 2f;
-
+    // 미리 구해놓은 원 좌표에 총알을 생성하고 각 방향으로 이동시킴
     void ShootBullet()
     {
         CameraController.Shake();
@@ -123,41 +130,48 @@ public class BossController : MonoBehaviour
         }
     }
 
+    // 공격 사운드 재생
     void PlayRandomShootSound()
     {
         RandomlySelectShootSound();
         audioSource.Play();
     }
 
+    // 공격 사운드 랜덤 선택
     void RandomlySelectShootSound()
     {
         int r = Random.Range(0, shootSounds.Length);
         audioSource.clip = shootSounds[r];
     }
 
+    // 각도로 방향 벡터 구하는 함수
     Vector2 GetDirectionFromAngle(int angle)
     {
         angle = (angle + 1) * 12;
         return Quaternion.Euler(new Vector3(0f, 0f, angle)) * Vector2.up;
     }
 
+    // 공격 딜레이에 사용되는 함수
     void StopAttack()
     {
         isAttacking = false;
     }
 
+    // 달리는 애니메이션 정지
     void StopRunning()
     {
         if (animator.GetBool("Running"))
             animator.SetBool("Running", false);
     }
 
+    // 달리는 애니메이션 실행
     void StartRunning()
     {
         if (!animator.GetBool("Running"))
             animator.SetBool("Running", true);
     }
 
+    // 패턴3: 멈춰서 아무 행동도 하지 않음
     void Stop()
     {
         StopRunning();
@@ -170,13 +184,15 @@ public class BossController : MonoBehaviour
 
     const float WAIT_TIME_FOR_CHANGE_MODE = 5f;
 
+    // 5초마다 패턴을 바꿈
     private void RandomlySelectMode()
     {
         int rand = 0;
         do
         {
-            rand = Random.Range(0, 3);
+            rand = Random.Range(0, 2);
         } while (rand == mode);
+        float wait = WAIT_TIME_FOR_CHANGE_MODE;
         switch (rand)
         {
             case FOLLOW_MODE:
@@ -187,10 +203,11 @@ public class BossController : MonoBehaviour
                 break;
             case STOP_MODE:
                 StopMove();
+                wait = 1f;
                 break;
         }
         mode = rand;
-        Invoke("RandomlySelectMode", WAIT_TIME_FOR_CHANGE_MODE);
+        Invoke("RandomlySelectMode", wait);
     }
 
     void StartFollow()
@@ -219,10 +236,10 @@ public class BossController : MonoBehaviour
         
         switch (collision.gameObject.tag)
         {
-            case "Player":
+            case "Player":  // 플레이어, 보스 충돌 시 플레이어에게 데미지 부여
                 collision.gameObject.GetComponent<PlayerController>().DamagedByMonster(gameObject, 20f);
                 break;
-            case "Particle":
+            case "Particle":// 플레이어의 총알과 충돌했을 시, 총알의 충돌 횟수만큼 데미지 받음
                 if (collision.gameObject.GetComponent<BulletController>() == null)
                     return;
                 int bounce = collision.gameObject.GetComponent<BulletController>().GetBounce() - 1;
@@ -232,6 +249,7 @@ public class BossController : MonoBehaviour
         }
     }
 
+    // 보스 피격 처리
     void Damaged(int damage)
     {
         bounceForDead -= damage;
@@ -241,8 +259,8 @@ public class BossController : MonoBehaviour
             isDead = true;
             StopRunning();
             animator.SetTrigger("Die");
-            Time.timeScale = 0.5f;
-            Invoke("Die", 1.5f);
+            Time.timeScale = 0.5f;  // 죽을 때 0.5배속으로 재생됨
+            Invoke("Die", 1.5f);    // 죽고 1.5초 후 종료
         }
         hpBar.remainHP = bounceForDead;
     }
@@ -253,6 +271,7 @@ public class BossController : MonoBehaviour
         Invoke("ShowClearUI", 1f);
     }
 
+    // 클리어 화면 표시
     void ShowClearUI()
     {
         cleared = true;

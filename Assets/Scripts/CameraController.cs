@@ -24,38 +24,23 @@ public class CameraController : MonoBehaviour
 
     Vector3 targetPosition;
 
+    // 방 이동 시 사용되는 카메라 이동
     public void MoveTo(Vector3 position)
     {
         targetPosition = position;
         targetPosition.z = transform.position.z;
     }
 
+    // 정해진 좌표로 천천히 카메라 이동
     private void FixedUpdate()
     {
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, moveSpeed);
         transform.position = smoothedPosition;
     }
 
-    //void FixedUpdate()
-    //{
-    //    Vector3 desiredPosition = targetTransform.position + offset;
-    //    Vector3 directionToCrosshairFromPlayer = Vector3.zero - GetMousePoint();
-    //    directionToCrosshairFromPlayer = directionToCrosshairFromPlayer.normalized * -1 * distance;
-    //    desiredPosition += directionToCrosshairFromPlayer;
-    //    Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, moveSpeed);
-    //    transform.position = smoothedPosition;
-
-    //}
-    //Vector3 GetMousePoint()
-    //{
-    //    Vector3 mouse = Input.mousePosition;
-    //    Ray castPoint = Camera.main.ScreenPointToRay(mouse);
-    //    Vector3 point = castPoint.GetPoint(0.0f);
-    //    return point;
-    //}
-
     const float SHAKE_OFFSET = 1.0f;
 
+    // 화면 흔들림
     public static void Shake()
     {
         Vector3 desiredPosition = camera.transform.position;
@@ -66,6 +51,7 @@ public class CameraController : MonoBehaviour
         camera.Invoke("CalmDown", 0.05f);
     }
 
+    // 위로 간 화면을 다시 제자리로 돌림
     void CalmDown()
     {
         Vector3 desiredPosition = camera.transform.position;

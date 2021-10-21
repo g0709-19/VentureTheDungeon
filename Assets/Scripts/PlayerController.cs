@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 플레이어가 죽었거나, 보스 클리어했을 경우 애니메이션 정지
         if (isDead || BossController.cleared)
         {
             if (isWalking())
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // 수평, 수직 키보드로부터 입력 받음
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
@@ -133,6 +135,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 죽은 상태에서 마우스 클릭 시, 새로 시작
         if (isDead)
         {
             if (Input.GetMouseButtonDown(MOUSE_LEFT))
@@ -140,6 +143,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // 플레이어 이동
         Vector2 newVelocity = new Vector2(h, v);
         newVelocity *= speed;
         rigidBody.velocity = newVelocity;

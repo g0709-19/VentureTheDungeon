@@ -30,7 +30,8 @@ public class RoomTemplates : MonoBehaviour
                 {
                     rooms[i].name = "boss";
                     rooms[i].GetComponent<RoomEnter>().SetBossRoom();
-                    Instantiate(bossRoom, rooms[i].transform.position, Quaternion.identity).transform.parent = bossRoomSpawnPoint.gameObject.transform;
+                    Instantiate(bossRoom, rooms[i].transform.position,
+                        Quaternion.identity).transform.parent = bossRoomSpawnPoint.gameObject.transform;
                     spawnedBoss = true;
                 }
             }
